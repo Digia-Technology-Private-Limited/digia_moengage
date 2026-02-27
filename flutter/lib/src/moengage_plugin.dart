@@ -100,7 +100,9 @@ class MoEngagePlugin implements DigiaCEPPlugin {
         _moEngage.selfHandledDismissed(data);
         // Remove from cache once dismissed — campaign lifecycle is complete.
         _campaignCache.remove(campaignId);
-        Logger.log('notifyEvent: selfHandledDismissed — campaignId=$campaignId');
+        Logger.log(
+          'notifyEvent: selfHandledDismissed — campaignId=$campaignId',
+        );
     }
   }
 
@@ -145,10 +147,7 @@ class MoEngagePlugin implements DigiaCEPPlugin {
     return InAppPayload(
       id: campaignId,
       content: _extractContent(data),
-      cepContext: {
-        'campaignId': campaignId,
-        'campaignName': campaignName,
-      },
+      cepContext: {'campaignId': campaignId, 'campaignName': campaignName},
     );
   }
 

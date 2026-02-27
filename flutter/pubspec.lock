@@ -164,9 +164,11 @@ packages:
   digia_ui:
     dependency: "direct main"
     description:
-      path: "../digia_engage/flutter"
-      relative: true
-    source: path
+      path: flutter
+      ref: main
+      resolved-ref: e6500a6dac71157c206e76b611211ea72042167a
+      url: "git@github.com:Digia-Technology-Private-Limited/digia_engage.git"
+    source: git
     version: "1.6.1"
   dio:
     dependency: transitive
