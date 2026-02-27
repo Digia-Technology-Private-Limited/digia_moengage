@@ -6,8 +6,6 @@ import 'package:digia_ui/api/models/digia_experience_event.dart';
 import 'package:digia_ui/api/models/in_app_payload.dart';
 import 'package:moengage_flutter/moengage_flutter.dart' hide Logger;
 
-import 'utils/logger.dart';
-
 /// Digia CEP plugin for MoEngage.
 ///
 /// Bridges MoEngage's Self-Handled In-App campaign system into
@@ -59,8 +57,6 @@ class MoEngagePlugin implements DigiaCEPPlugin {
 
     // Ask MoEngage to evaluate and deliver any eligible campaign now.
     _moEngage.getSelfHandledInApp();
-
-    Logger.info('setup complete — listening for self-handled in-app campaigns');
   }
 
   @override
@@ -68,41 +64,31 @@ class MoEngagePlugin implements DigiaCEPPlugin {
     // MoEngage uses setCurrentContext to associate the user with a screen
     // context for in-app campaign targeting.
     _moEngage.setCurrentContext([name]);
-    Logger.log('forwardScreen: $name');
   }
 
   @override
   void notifyEvent(DigiaExperienceEvent event, InAppPayload payload) {
     final campaignId = payload.cepContext['campaignId'] as String?;
     if (campaignId == null) {
-      Logger.warning('notifyEvent: missing campaignId in cepContext');
       return;
     }
 
     final data = _campaignCache[campaignId];
     if (data == null) {
-      Logger.warning(
-        'notifyEvent: no cached SelfHandledCampaignData for campaignId=$campaignId',
-      );
       return;
     }
 
     switch (event) {
       case ExperienceImpressed():
         _moEngage.selfHandledShown(data);
-        Logger.log('notifyEvent: selfHandledShown — campaignId=$campaignId');
 
       case ExperienceClicked():
         _moEngage.selfHandledClicked(data);
-        Logger.log('notifyEvent: selfHandledClicked — campaignId=$campaignId');
 
       case ExperienceDismissed():
         _moEngage.selfHandledDismissed(data);
         // Remove from cache once dismissed — campaign lifecycle is complete.
         _campaignCache.remove(campaignId);
-        Logger.log(
-          'notifyEvent: selfHandledDismissed — campaignId=$campaignId',
-        );
     }
   }
 
@@ -112,7 +98,6 @@ class MoEngagePlugin implements DigiaCEPPlugin {
     _moEngage.setSelfHandledInAppHandler(null);
     _delegate = null;
     _campaignCache.clear();
-    Logger.info('teardown complete');
   }
 
   // ─── Private ───────────────────────────────────────────────────────────────
@@ -120,7 +105,6 @@ class MoEngagePlugin implements DigiaCEPPlugin {
   /// Called by MoEngage when a self-handled in-app campaign is ready.
   void _onSelfHandledInApp(SelfHandledCampaignData? data) {
     if (data == null) {
-      Logger.warning('Received null SelfHandledCampaignData — skipping.');
       return;
     }
 
@@ -129,7 +113,6 @@ class MoEngagePlugin implements DigiaCEPPlugin {
     // Cache for lifecycle event correlation in notifyEvent().
     _campaignCache[payload.id] = data;
 
-    Logger.info('Campaign ready — id=${payload.id}');
     _delegate?.onExperienceReady(payload);
   }
 
@@ -164,7 +147,7 @@ class MoEngagePlugin implements DigiaCEPPlugin {
         payloadMap = decoded;
       }
     } catch (e) {
-      Logger.warning('Could not parse campaign payload JSON: $e');
+      // If parsing fails, we can still provide campaign metadata in the content.
     }
 
     return <String, dynamic>{
