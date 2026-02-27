@@ -54,9 +54,6 @@ class MoEngagePlugin implements DigiaCEPPlugin {
 
     // Register for MoEngage self-handled in-app callbacks.
     _moEngage.setSelfHandledInAppHandler(_onSelfHandledInApp);
-
-    // Ask MoEngage to evaluate and deliver any eligible campaign now.
-    _moEngage.getSelfHandledInApp();
   }
 
   @override
