@@ -14,8 +14,8 @@ import com.moengage.inapp.model.SelfHandledCampaignData
  * - merging it with campaign metadata (ID + name), and
  * - writing the identifiers needed for lifecycle correlation into [InAppPayload.cepContext].
  *
- * Parsing failures are gracefully degraded — an empty payload map is used
- * so the campaign still reaches the rendering engine.
+ * Parsing failures are gracefully degraded — an empty payload map is used so the campaign still
+ * reaches the rendering engine.
  */
 class CampaignPayloadMapper : ICampaignPayloadMapper {
 
@@ -27,28 +27,22 @@ class CampaignPayloadMapper : ICampaignPayloadMapper {
         val campaignName = data.campaignData.campaignName
 
         return InAppPayload(
-            id = campaignId,
-            content = buildContent(data),
-            cepContext = mapOf(
-                "campaignId" to campaignId,
-                "campaignName" to campaignName
-            )
+                id = campaignId,
+                content = buildContent(data),
+                cepContext = mapOf("campaignId" to campaignId, "campaignName" to campaignName)
         )
     }
 
     // ─── Private ──────────────────────────────────────────────────────────────
 
-    /**
-     * Merges campaign metadata with the raw marketer JSON from the dashboard.
-     */
+    /** Merges campaign metadata with the raw marketer JSON from the dashboard. */
     private fun buildContent(data: SelfHandledCampaignData): Map<String, Any?> {
         val payloadMap = mutableMapOf<String, Any?>()
 
         try {
             val decoded = gson.fromJson(data.campaign.payload, Map::class.java)
             if (decoded is Map<*, *>) {
-                @Suppress("UNCHECKED_CAST")
-                payloadMap.putAll(decoded as Map<String, Any?>)
+                @Suppress("UNCHECKED_CAST") payloadMap.putAll(decoded as Map<String, Any?>)
             }
         } catch (e: JsonSyntaxException) {
             Log.w(tag, "Could not parse campaign payload JSON: $e")

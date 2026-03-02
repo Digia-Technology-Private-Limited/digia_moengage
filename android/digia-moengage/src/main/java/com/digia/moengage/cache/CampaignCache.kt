@@ -5,11 +5,11 @@ import com.moengage.inapp.model.SelfHandledCampaignData
 /**
  * In-memory implementation of [ICampaignCache].
  *
- * Backed by a plain [MutableMap]; entries are evicted per-campaign on [remove]
- * (post-dismiss) and globally on [clear] (teardown).
+ * Backed by a plain [MutableMap]; entries are evicted per-campaign on [remove] (post-dismiss) and
+ * globally on [clear] (teardown).
  *
- * Swap this with an LRU or persistent cache by implementing [ICampaignCache]
- * and injecting it into [MoEngagePlugin] — no other code changes required.
+ * Swap this with an LRU or persistent cache by implementing [ICampaignCache] and injecting it into
+ * [MoEngagePlugin] — no other code changes required.
  */
 class CampaignCache : ICampaignCache {
 
@@ -27,7 +27,9 @@ class CampaignCache : ICampaignCache {
 
     override fun clear() = store.clear()
 
-    override val count: Int get() = store.size
+    override val count: Int
+        get() = store.size
 
-    override val campaignIds: List<String> get() = store.keys.toList()
+    override val campaignIds: List<String>
+        get() = store.keys.toList()
 }

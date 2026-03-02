@@ -2,10 +2,10 @@ package com.digia.moengage
 
 import android.content.Context
 import android.util.Log
+import com.digia.engage.DiagnosticReport
 import com.digia.engage.DigiaCEPDelegate
 import com.digia.engage.DigiaCEPPlugin
 import com.digia.engage.DigiaExperienceEvent
-import com.digia.engage.DiagnosticReport
 import com.digia.engage.InAppPayload
 import com.digia.moengage.cache.CampaignCache
 import com.digia.moengage.cache.ICampaignCache
@@ -18,8 +18,7 @@ import com.moengage.inapp.model.SelfHandledCampaignData
 /**
  * Digia CEP plugin for MoEngage Android SDK.
  *
- * Bridges MoEngage's Self-Handled In-App campaign system into
- * Digia's rendering engine.
+ * Bridges MoEngage's Self-Handled In-App campaign system into Digia's rendering engine.
  *
  * ## Usage
  * ```kotlin
@@ -32,25 +31,25 @@ import com.moengage.inapp.model.SelfHandledCampaignData
  * ```
  *
  * ## SOLID design
- * - **SRP**: Each concern lives in its own class —
- *   [ICampaignCache] stores data, [ICampaignPayloadMapper] transforms it,
- *   [MoEngageEventDispatcher] routes events. This class only orchestrates.
- * - **OCP**: Adding a new [DigiaExperienceEvent] requires updating only
- *   [MoEngageEventDispatcher] — this class is closed for modification.
- * - **LSP**: Inject any [ICampaignCache] / [ICampaignPayloadMapper] implementation
- *   without changing behaviour.
+ * - **SRP**: Each concern lives in its own class — [ICampaignCache] stores data,
+ * [ICampaignPayloadMapper] transforms it, [MoEngageEventDispatcher] routes events. This class only
+ * orchestrates.
+ * - **OCP**: Adding a new [DigiaExperienceEvent] requires updating only [MoEngageEventDispatcher] —
+ * this class is closed for modification.
+ * - **LSP**: Inject any [ICampaignCache] / [ICampaignPayloadMapper] implementation without changing
+ * behaviour.
  * - **ISP**: Each interface carries exactly the operations its consumers need.
- * - **DIP**: All dependencies are abstractions; concrete classes are provided
- *   by default but can be overridden for testing or alternative strategies.
+ * - **DIP**: All dependencies are abstractions; concrete classes are provided by default but can be
+ * overridden for testing or alternative strategies.
  *
- * @param context   Application context required by the MoEngage inapp SDK.
- * @param cache     Campaign data cache. Defaults to an in-memory [CampaignCache].
- * @param mapper    Payload mapper. Defaults to [CampaignPayloadMapper].
+ * @param context Application context required by the MoEngage inapp SDK.
+ * @param cache Campaign data cache. Defaults to an in-memory [CampaignCache].
+ * @param mapper Payload mapper. Defaults to [CampaignPayloadMapper].
  */
 class MoEngagePlugin(
-    private val context: Context,
-    private val cache: ICampaignCache = CampaignCache(),
-    private val mapper: ICampaignPayloadMapper = CampaignPayloadMapper(),
+        private val context: Context,
+        private val cache: ICampaignCache = CampaignCache(),
+        private val mapper: ICampaignPayloadMapper = CampaignPayloadMapper(),
 ) : DigiaCEPPlugin {
 
     private val tag = "DigiaMoEngagePlugin"
@@ -98,28 +97,28 @@ class MoEngagePlugin(
     override fun healthCheck(): DiagnosticReport {
         return if (delegate == null) {
             DiagnosticReport(
-                isHealthy = false,
-                issue = "Plugin has no delegate — setup() has not been called.",
-                resolution = "Call Digia.register(MoEngagePlugin(applicationContext)) before using the SDK."
+                    isHealthy = false,
+                    issue = "Plugin has no delegate — setup() has not been called.",
+                    resolution =
+                            "Call Digia.register(MoEngagePlugin(applicationContext)) before using the SDK."
             )
         } else {
             DiagnosticReport(
-                isHealthy = true,
-                metadata = mapOf(
-                    "identifier" to identifier,
-                    "delegateSet" to true,
-                    "cachedCampaigns" to cache.count,
-                    "cachedCampaignIds" to cache.campaignIds
-                )
+                    isHealthy = true,
+                    metadata =
+                            mapOf(
+                                    "identifier" to identifier,
+                                    "delegateSet" to true,
+                                    "cachedCampaigns" to cache.count,
+                                    "cachedCampaignIds" to cache.campaignIds
+                            )
             )
         }
     }
 
     // --- Private --------------------------------------------------------------
 
-    /**
-     * Called by MoEngage when a self-handled in-app campaign is ready.
-     */
+    /** Called by MoEngage when a self-handled in-app campaign is ready. */
     private fun onSelfHandledInApp(data: SelfHandledCampaignData?) {
         if (data == null) {
             Log.w(tag, "Received null SelfHandledCampaignData — skipping.")
