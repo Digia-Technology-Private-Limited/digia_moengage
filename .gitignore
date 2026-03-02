@@ -1,0 +1,49 @@
+# ─── Android ──────────────────────────────────────────────────────────────────
+*.iml
+.gradle/
+android/.gradle/
+**/build/
+local.properties
+android/.idea/
+*.jks
+*.keystore
+
+# Generated files
+**/generated/
+
+# Kotlin build cache
+.kotlin/
+
+# ─── Flutter / Dart ───────────────────────────────────────────────────────────
+# Dart tool
+.dart_tool/
+flutter/.dart_tool/
+
+# Flutter generated
+*.g.dart
+*.freezed.dart
+doc/api/
+
+# Build output
+flutter/build/
+
+# Pub
+.pub-cache/
+.pub/
+flutter/pubspec.lock
+
+# Flutter plugin links
+flutter/.flutter-plugins
+flutter/.flutter-plugins-dependencies
+
+# ─── macOS ────────────────────────────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo

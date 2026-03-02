@@ -15,11 +15,14 @@ dependencies:
 
   # Digia core — the DigiaCEPPlugin interface lives here.
   # Path dependency for local development; replace with pub.dev version on publish.
-  digia_ui:
-    git:
-      url: git@github.com:Digia-Technology-Private-Limited/digia_engage.git
-      ref: main
-      path: flutter
+  digia_engage:
+    path: /Users/ram/Digia/digia_engage/flutter
 
   # MoEngage Flutter SDK
   moengage_flutter: ^10.5.0
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: DigiaMoEngagePlugin
