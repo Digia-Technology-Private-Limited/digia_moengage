@@ -63,6 +63,7 @@ final class MoEngagePlugin implements DigiaCEPPlugin {
   void setup(DigiaCEPDelegate delegate) {
     _delegate = delegate;
     _moEngage.setSelfHandledInAppHandler(_onSelfHandledInApp);
+    _moEngage.getSelfHandledInApp();
     Logger.i(
         '$identifier: setup complete — listening for self-handled in-app campaigns');
   }
@@ -70,6 +71,7 @@ final class MoEngagePlugin implements DigiaCEPPlugin {
   @override
   void forwardScreen(String name) {
     _moEngage.setCurrentContext([name]);
+    _moEngage.getSelfHandledInApp();
     Logger.i('$identifier: forwardScreen → $name');
   }
 

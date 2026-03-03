@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "digia-moengage-plugin"
+rootProject.name = "digia-moengage"
 include ':digia-moengage'

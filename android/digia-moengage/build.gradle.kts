@@ -68,3 +68,19 @@ dependencies {
     // JSON
     implementation("com.google.code.gson:gson:2.10.1")
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.digia"
+                artifactId = "digia-moengage"
+                version = "0.1.0"
+            }
+        }
+        repositories {
+            mavenLocal()
+        }
+    }
+}

@@ -56,6 +56,13 @@ class MoEngagePlugin(
     private var delegate: DigiaCEPDelegate? = null
     private val dispatcher = MoEngageEventDispatcher(context = context, cache = cache)
 
+    private val listener= MoEngageSelfHandledDataListener(
+            cache = cache,
+            mapper = mapper,
+            delegate = delegate,
+            tag = tag,
+    )
+
     // --- DigiaCEPPlugin -------------------------------------------------------
 
     override val identifier: String = "moengage"
@@ -63,11 +70,12 @@ class MoEngagePlugin(
     override fun setup(delegate: DigiaCEPDelegate) {
         this.delegate = delegate
 
+        MoEInAppHelper.getInstance().setSelfHandledListener { listener }
         // Ask MoEngage to evaluate and deliver any eligible campaign now.
         // The listener is invoked when a self-handled in-app is available.
-        MoEInAppHelper.getInstance().getSelfHandledInApp(context) { data ->
-            onSelfHandledInApp(data)
-        }
+        // MoEInAppHelper.getInstance().getSelfHandledInApp(context) { data ->
+        //     onSelfHandledInApp(data)
+        // }
 
         Log.i(tag, "setup complete — listening for self-handled in-app campaigns")
     }
@@ -116,19 +124,4 @@ class MoEngagePlugin(
         }
     }
 
-    // --- Private --------------------------------------------------------------
-
-    /** Called by MoEngage when a self-handled in-app campaign is ready. */
-    private fun onSelfHandledInApp(data: SelfHandledCampaignData?) {
-        if (data == null) {
-            Log.w(tag, "Received null SelfHandledCampaignData — skipping.")
-            return
-        }
-
-        val payload = mapper.map(data)
-        cache.put(payload.id, data)
-
-        Log.i(tag, "Campaign ready — id=${payload.id}")
-        delegate?.onCampaignTriggered(payload)
-    }
 }
