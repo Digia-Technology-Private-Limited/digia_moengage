@@ -1,17 +1,17 @@
 {
-    "name": "@digia/moengage-react-native",
+    "name": "@digia/moengage-plugin",
     "version": "0.1.0",
     "description": "Pure TypeScript Digia CEP plugin for MoEngage – works on both Android and iOS",
     "main": "lib/commonjs/index",
     "module": "lib/module/index",
-    "types": "lib/typescript/src/index.d.ts",
+    "types": "lib/typescript/index.d.ts",
     "react-native": "src/index",
     "source": "src/index",
     "exports": {
         ".": {
             "import": "./lib/module/index.js",
             "require": "./lib/commonjs/index.js",
-            "types": "./lib/typescript/src/index.d.ts"
+            "types": "./lib/typescript/index.d.ts"
         }
     },
     "files": [
@@ -39,12 +39,13 @@
     "author": "Digia Technology Private Limited",
     "license": "MIT",
     "peerDependencies": {
+        "@digia/engage": "file:../../../digia_engage/react-native",
         "react": "*",
         "react-native": "*",
-        "@digia/engage-react-native": "*",
         "react-native-moengage": "*"
     },
     "devDependencies": {
+        "@digia/engage": "file:../../../digia_engage/react-native",
         "@types/react": "^18.2.0",
         "@types/react-native": "^0.73.0",
         "react": "18.2.0",

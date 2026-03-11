@@ -64,7 +64,7 @@
  */
 
 import { DeviceEventEmitter, EmitterSubscription } from 'react-native';
-import { Digia, type DigiaPlugin } from '@digia/engage-react-native';
+import { Digia, type DigiaPlugin } from '@digia/engage';
 import { CampaignCache, type ICampaignCache } from './CampaignCache';
 import { mapCampaignPayload } from './CampaignPayloadMapper';
 import {
