@@ -8,8 +8,8 @@ Add to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  digia_moengage_plugin: ^1.0.0-beta.1
-  digia_engage: ^1.0.0-beta.1
+  digia_moengage_plugin: ^1.0.0-beta.2
+  digia_engage: ^1.0.0-beta.2
   moengage_flutter: ^10.5.0
 ```
 
