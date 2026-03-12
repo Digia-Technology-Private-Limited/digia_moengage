@@ -13,7 +13,7 @@ import com.digia.moengage.event.MoEngageEventDispatcher
 import com.digia.moengage.mapper.CampaignPayloadMapper
 import com.digia.moengage.mapper.ICampaignPayloadMapper
 import com.moengage.inapp.MoEInAppHelper
-import com.moengage.inapp.model.SelfHandledCampaignData
+import com.moengage.inapp.listeners.SelfHandledAvailableListener
 
 /**
  * Digia CEP plugin for MoEngage Android SDK.
@@ -56,12 +56,7 @@ class MoEngagePlugin(
     private var delegate: DigiaCEPDelegate? = null
     private val dispatcher = MoEngageEventDispatcher(context = context, cache = cache)
 
-    private val listener= MoEngageSelfHandledDataListener(
-            cache = cache,
-            mapper = mapper,
-            delegate = delegate,
-            tag = tag,
-    )
+    private var listener: SelfHandledAvailableListener? = null
 
     // --- DigiaCEPPlugin -------------------------------------------------------
 
@@ -69,8 +64,15 @@ class MoEngagePlugin(
 
     override fun setup(delegate: DigiaCEPDelegate) {
         this.delegate = delegate
-
-        MoEInAppHelper.getInstance().setSelfHandledListener { listener }
+        val newListener =
+                MoEngageSelfHandledDataListener(
+                        cache = cache,
+                        mapper = mapper,
+                        delegate = delegate,
+                        tag = tag,
+                )
+        this.listener = newListener
+        MoEInAppHelper.getInstance().setSelfHandledListener(newListener)
         // Ask MoEngage to evaluate and deliver any eligible campaign now.
         // The listener is invoked when a self-handled in-app is available.
         // MoEInAppHelper.getInstance().getSelfHandledInApp(context) { data ->
@@ -84,6 +86,7 @@ class MoEngagePlugin(
         // MoEngage uses setInAppContext to associate the user with a screen
         // context for in-app campaign targeting.
         MoEInAppHelper.getInstance().setInAppContext(setOf(name))
+        listener?.let { MoEInAppHelper.getInstance().getSelfHandledInApp(context, it) }
         Log.i(tag, "forwardScreen: $name")
     }
 
@@ -123,5 +126,4 @@ class MoEngagePlugin(
             )
         }
     }
-
 }

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.digia"
-version = "0.1.0"
+version = "1.0.0-beta.1"
 
 android {
     namespace = "com.digia.moengage"
@@ -76,7 +76,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.digia"
                 artifactId = "digia-moengage"
-                version = "0.1.0"
+                version = "1.0.0-beta.1"
             }
         }
         repositories {
