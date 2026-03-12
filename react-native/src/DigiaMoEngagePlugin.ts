@@ -63,8 +63,8 @@
  *   flutter:  digia_moengage_plugin/lib/src/moengage_plugin.dart
  */
 
-import { DeviceEventEmitter, EmitterSubscription } from 'react-native';
 import { Digia, type DigiaPlugin } from '@digia/engage';
+import { DeviceEventEmitter, EmitterSubscription } from 'react-native';
 import { CampaignCache, type ICampaignCache } from './CampaignCache';
 import { mapCampaignPayload } from './CampaignPayloadMapper';
 import {
@@ -182,7 +182,7 @@ export class DigiaMoEngagePlugin implements DigiaPlugin {
      */
     private _onSelfHandledInApp = (data: MoEngageSelfHandledData): void => {
         const payload = mapCampaignPayload(data);
-
+        console.log('[DigiaMoEngagePlugin] Received self-handled in-app campaign from MoEngage:', payload);
         // Cache the raw MoEngage data so lifecycle events can be reported later.
         this._cache.put(payload.id, data);
 
