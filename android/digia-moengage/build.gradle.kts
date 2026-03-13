@@ -1,8 +1,6 @@
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.android") version "1.9.0"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.1.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
+    id("org.jetbrains.kotlin.android") version "2.1.0"
     id("maven-publish")
 }
 
@@ -39,10 +37,6 @@ android {
         jvmTarget = "1.8"
     }
 
-    buildFeatures {
-        compose = true
-    }
-
     publishing {
         singleVariant("release") {
             withSourcesJar()
@@ -51,23 +45,19 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.material3:material3")
-
     // Digia core
-	implementation ("com.github.Digia-Technology-Private-Limited:digia_engage:android.1.0.0-beta.3")
+    // implementation("com.github.Digia-Technology-Private-Limited:digia_engage:android.1.0.0-beta.3")
+    implementation(libs.digia.engage)
 
-    // MoEngage Android SDK BOM
-    implementation(platform("com.moengage:android-bom:1.5.1"))
-    implementation("com.moengage:moe-android-sdk")
-    implementation("com.moengage:inapp")
+    // MoEngage
+   implementation(libs.inapp)
+    implementation(libs.moe.android.sdk)
+    // implementation(platform("com.moengage:android-bom:1.5.1"))
+    // implementation("com.moengage:moe-android-sdk")
+    // implementation("com.moengage:inapp")
 
     // JSON
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.gson)
 }
 
 afterEvaluate {

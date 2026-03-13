@@ -76,7 +76,7 @@ class MoEngagePlugin(
         // Ask MoEngage to evaluate and deliver any eligible campaign now.
         // The listener is invoked when a self-handled in-app is available.
         // MoEInAppHelper.getInstance().getSelfHandledInApp(context) { data ->
-        //     onSelfHandledInApp(data)
+        //     newListener.onSelfHandledAvailable(data)
         // }
 
         Log.i(tag, "setup complete — listening for self-handled in-app campaigns")
