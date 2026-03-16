@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.digia"
-version = "1.0.0-beta.3"
+version = "1.0.0-beta.6"
 
 android {
     namespace = "com.digia.moengage"
@@ -47,7 +47,8 @@ android {
 dependencies {
     // Digia core
     // implementation("com.github.Digia-Technology-Private-Limited:digia_engage:android.1.0.0-beta.3")
-    implementation(libs.digia.engage)
+    // implementation(libs.digia.engage)
+    implementation("com.digia:digia-engage:1.0.0-beta.6")
 
     // MoEngage
    implementation(libs.inapp)
@@ -67,7 +68,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.digia"
                 artifactId = "digia-moengage"
-                version = "1.0.0-beta.3"
+                version = "1.0.0-beta.6"
             }
         }
         repositories {
