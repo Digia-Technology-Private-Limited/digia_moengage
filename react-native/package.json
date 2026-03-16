@@ -42,7 +42,7 @@
         "@digia/engage": "file:../../../digia_engage/react-native",
         "react": "*",
         "react-native": "*",
-        "react-native-moengage": "*"
+        "react-native-moengage": "^12.5.0"
     },
     "devDependencies": {
         "@digia/engage": "file:../../../digia_engage/react-native",
@@ -51,6 +51,7 @@
         "react": "18.2.0",
         "react-native": "0.73.0",
         "react-native-builder-bob": "^0.23.0",
+        "react-native-moengage": "^12.5.0",
         "typescript": "^5.2.0"
     },
     "react-native-builder-bob": {
