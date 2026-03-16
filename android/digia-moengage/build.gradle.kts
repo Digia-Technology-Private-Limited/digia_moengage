@@ -46,9 +46,9 @@ android {
 
 dependencies {
     // Digia core
-    // implementation("com.github.Digia-Technology-Private-Limited:digia_engage:android.1.0.0-beta.3")
-    // implementation(libs.digia.engage)
-    implementation("com.digia:digia-engage:1.0.0-beta.6")
+     implementation("com.github.Digia-Technology-Private-Limited:digia_engage:android.1.0.0-beta.6")
+    // // implementation(libs.digia.engage)
+    // implementation("com.digia:digia-engage:1.0.0-beta.6")
 
     // MoEngage
    implementation(libs.inapp)
