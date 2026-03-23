@@ -1,7 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android") version "2.1.0"
-    id("maven-publish")
+    id("com.vanniktech.maven.publish")
+    id("signing")
 }
 
 group = "com.digia"
@@ -37,42 +38,29 @@ android {
         jvmTarget = "1.8"
     }
 
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
+
 }
 
 dependencies {
     // Digia core
-     implementation("com.github.Digia-Technology-Private-Limited:digia_engage:android.1.0.0-beta.6")
-    // // implementation(libs.digia.engage)
-    // implementation("com.digia:digia-engage:1.0.0-beta.6")
+    implementation(libs.engage)
 
     // MoEngage
-   implementation(libs.inapp)
+    implementation(libs.inapp)
     implementation(libs.moe.android.sdk)
-    // implementation(platform("com.moengage:android-bom:1.5.1"))
-    // implementation("com.moengage:moe-android-sdk")
-    // implementation("com.moengage:inapp")
 
     // JSON
     implementation(libs.gson)
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-                groupId = "com.digia"
-                artifactId = "digia-moengage"
-                version = "1.0.0-beta.6"
-            }
-        }
-        repositories {
-            mavenLocal()
-        }
+
+val signingKeyId = findProperty("signingInMemoryKeyId") as String? ?: ""
+val signingPassword = findProperty("signingInMemoryKeyPassword") as String? ?: ""
+val keyFile = rootProject.file("private-key.asc")
+
+signing {
+    if (keyFile.exists()) {
+        useInMemoryPgpKeys(signingKeyId, keyFile.readText(), signingPassword)
+        sign(publishing.publications)
     }
 }

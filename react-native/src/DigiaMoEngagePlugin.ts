@@ -25,7 +25,7 @@
  * Mirrors: com.digia.moengage.MoEngagePlugin (Android)
  */
 
-import type { DigiaDelegate, DigiaPlugin } from '@digia/engage';
+import type { DigiaDelegate, DigiaPlugin } from '@digia-engage/core';
 import { DeviceEventEmitter, type EmitterSubscription } from 'react-native';
 import { CampaignCache, type ICampaignCache } from './CampaignCache';
 import { mapCampaignPayload } from './CampaignPayloadMapper';

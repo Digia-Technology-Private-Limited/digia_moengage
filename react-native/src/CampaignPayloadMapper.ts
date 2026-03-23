@@ -1,4 +1,4 @@
-import type { InAppPayload } from '@digia/engage';
+import type { InAppPayload } from '@digia-engage/core';
 import type { MoEngageSelfHandledData } from './types';
 
 /**
