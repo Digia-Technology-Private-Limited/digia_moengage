@@ -1,6 +1,6 @@
 import DigiaEngage
 import Foundation
-import MoEngageInApp
+import MoEngageInApps
 
 /// Default implementation of `ICampaignPayloadMapper`.
 ///
@@ -14,9 +14,9 @@ import MoEngageInApp
 public struct CampaignPayloadMapper: ICampaignPayloadMapper {
     public init() {}
 
-    public func map(_ campaign: InAppSelfHandledCampaign) -> InAppPayload {
-        let campaignId   = campaign.campaignInfo.campaignId
-        let campaignName = campaign.campaignInfo.campaignName
+    public func map(_ campaign: MoEngageInAppSelfHandledCampaign) -> InAppPayload {
+        let campaignId   = campaign.campaignId
+        let campaignName = campaign.campaignName
 
         let content = buildContent(from: campaign)
 
@@ -32,14 +32,14 @@ public struct CampaignPayloadMapper: ICampaignPayloadMapper {
 
     // MARK: - Private
 
-    private func buildContent(from campaign: InAppSelfHandledCampaign) -> InAppPayloadContent {
-        let campaignId   = campaign.campaignInfo.campaignId
-        let campaignName = campaign.campaignInfo.campaignName
+    private func buildContent(from campaign: MoEngageInAppSelfHandledCampaign) -> InAppPayloadContent {
+        let campaignId   = campaign.campaignId
+        let campaignName = campaign.campaignName
 
         // The marketer-authored payload JSON lives in the self-handled content string.
         var payloadMap: [String: JSONValue] = [:]
-        if let jsonString = campaign.selfHandledContent,
-           let data = jsonString.data(using: .utf8) {
+      let jsonString = campaign.campaignContent
+          if let data = jsonString.data(using: .utf8) {
             do {
                 if let decoded = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                     for (key, value) in decoded {

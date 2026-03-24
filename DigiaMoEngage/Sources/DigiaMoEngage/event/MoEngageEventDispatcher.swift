@@ -1,5 +1,5 @@
 import DigiaEngage
-import MoEngageInApp
+import MoEngageInApps
 import os.log
 
 /// Routes Digia overlay lifecycle events to MoEngage analytics.
@@ -39,15 +39,15 @@ final class MoEngageEventDispatcher {
 
         switch event {
         case .impressed:
-            MoEngageInApp.sharedInstance.selfHandledShown(campaign: data)
+            MoEngageSDKInApp.sharedInstance.selfHandledShown(campaignInfo: data)
             logger.debug("dispatched: selfHandledShown — campaignId=\(campaignId)")
 
         case .clicked:
-            MoEngageInApp.sharedInstance.selfHandledClicked(campaign: data)
+            MoEngageSDKInApp.sharedInstance.selfHandledClicked(campaignInfo: data)
             logger.debug("dispatched: selfHandledClicked — campaignId=\(campaignId)")
 
         case .dismissed:
-            MoEngageInApp.sharedInstance.selfHandledDismissed(campaign: data)
+            MoEngageSDKInApp.sharedInstance.selfHandledDismissed(campaignInfo: data)
             cache.remove(campaignId: campaignId)
             logger.debug("dispatched: selfHandledDismissed — campaignId=\(campaignId)")
         }
