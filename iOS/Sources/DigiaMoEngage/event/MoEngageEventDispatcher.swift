@@ -1,0 +1,57 @@
+import DigiaEngage
+import MoEngageInApp
+import os.log
+
+/// Routes Digia overlay lifecycle events to MoEngage analytics.
+///
+/// ## Strategy pattern
+/// Event dispatch is a dedicated responsibility, isolated here so that
+/// `MoEngagePlugin` is **closed for modification** when new event types are
+/// added. Only this class is updated — the plugin orchestrator is unchanged.
+///
+/// Swift's exhaustive `switch` over `DigiaExperienceEvent` provides compile-time
+/// safety: adding a new case causes a compile error here rather than a silent
+/// runtime miss.
+///
+/// ## Dependencies
+/// - `MoEngageInApp.shared`: MoEngage lifecycle APIs (shown / clicked / dismissed).
+/// - `ICampaignCache`: resolves the cached `InAppSelfHandledCampaign` required
+///   by the MoEngage APIs, and evicts entries post-dismiss.
+final class MoEngageEventDispatcher {
+    private let cache: ICampaignCache
+    private let logger = Logger(subsystem: "com.digia.moengage", category: "MoEngageEventDispatcher")
+
+    init(cache: ICampaignCache) {
+        self.cache = cache
+    }
+
+    /// Resolves cached `InAppSelfHandledCampaign` for `campaignId` and forwards
+    /// `event` to the appropriate MoEngage lifecycle API.
+    ///
+    /// - Returns: `true` on successful dispatch, `false` when `campaignId` is
+    ///   absent from the cache (guard against stale events).
+    @discardableResult
+    func dispatch(_ event: DigiaExperienceEvent, campaignId: String) -> Bool {
+        guard let data = cache.get(campaignId: campaignId) else {
+            logger.warning("no cached data for campaignId=\(campaignId)")
+            return false
+        }
+
+        switch event {
+        case .impressed:
+            MoEngageInApp.sharedInstance.selfHandledShown(campaign: data)
+            logger.debug("dispatched: selfHandledShown — campaignId=\(campaignId)")
+
+        case .clicked:
+            MoEngageInApp.sharedInstance.selfHandledClicked(campaign: data)
+            logger.debug("dispatched: selfHandledClicked — campaignId=\(campaignId)")
+
+        case .dismissed:
+            MoEngageInApp.sharedInstance.selfHandledDismissed(campaign: data)
+            cache.remove(campaignId: campaignId)
+            logger.debug("dispatched: selfHandledDismissed — campaignId=\(campaignId)")
+        }
+
+        return true
+    }
+}
