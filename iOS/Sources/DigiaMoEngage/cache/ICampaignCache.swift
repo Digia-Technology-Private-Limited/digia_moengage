@@ -1,4 +1,4 @@
-import MoEngageInApp
+import MoEngageInApps
 
 /// Abstraction for MoEngage self-handled campaign data caching.
 ///
@@ -7,11 +7,11 @@ import MoEngageInApp
 /// injected without touching `MoEngagePlugin` or `MoEngageEventDispatcher`.
 public protocol ICampaignCache: AnyObject {
     /// Stores `data` keyed by `campaignId`.
-    func put(campaignId: String, data: InAppSelfHandledCampaign)
+    func put(campaignId: String, data: MoEngageInAppSelfHandledCampaign)
 
-    /// Returns the cached `InAppSelfHandledCampaign` for `campaignId`,
+    /// Returns the cached `MoEngageInAppSelfHandledCampaign` for `campaignId`,
     /// or `nil` when absent.
-    func get(campaignId: String) -> InAppSelfHandledCampaign?
+    func get(campaignId: String) -> MoEngageInAppSelfHandledCampaign?
 
     /// Removes the entry for `campaignId` (call after campaign lifecycle ends).
     func remove(campaignId: String)

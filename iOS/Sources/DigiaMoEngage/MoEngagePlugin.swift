@@ -1,5 +1,6 @@
 import DigiaEngage
-import MoEngageInApp
+import MoEngageCore
+import MoEngageInApps
 import os.log
 
 /// Digia CEP plugin for MoEngage (iOS).
@@ -38,6 +39,9 @@ public final class MoEngagePlugin: DigiaCEPPlugin {
 
     private let logger = Logger(subsystem: "com.digia.moengage", category: "MoEngagePlugin")
 
+    /// Obj-C bridge: `MoEngageInAppNativeDelegate` requires `NSObjectProtocol`.
+    private lazy var inAppDelegate = MoEngageInAppDelegateAdapter(plugin: self)
+
     // MARK: - Init
 
     /// Creates a `MoEngagePlugin`.
@@ -57,8 +61,8 @@ public final class MoEngagePlugin: DigiaCEPPlugin {
 
     public func setup(delegate: DigiaCEPDelegate) {
         self.delegate = delegate
-        MoEngageInApp.sharedInstance.setInAppDelegate(self)
-        MoEngageInApp.sharedInstance.getSelfHandledInApp(withCompletionBlock: { [weak self] campaign, _ in
+        MoEngageSDKInApp.sharedInstance.setInAppDelegate(inAppDelegate)
+        MoEngageSDKInApp.sharedInstance.getSelfHandledInApp(completionBlock: { [weak self] campaign, _ in
             guard let self, let campaign else { return }
             self.handleSelfHandledCampaign(campaign)
         })
@@ -66,8 +70,8 @@ public final class MoEngagePlugin: DigiaCEPPlugin {
     }
 
     public func forwardScreen(_ name: String) {
-        MoEngageInApp.sharedInstance.setCurrentInAppContexts([name])
-        MoEngageInApp.sharedInstance.getSelfHandledInApp(withCompletionBlock: { [weak self] campaign, _ in
+        MoEngageSDKInApp.sharedInstance.setCurrentInAppContexts([name])
+        MoEngageSDKInApp.sharedInstance.getSelfHandledInApp(completionBlock: { [weak self] campaign, _ in
             guard let self, let campaign else { return }
             self.handleSelfHandledCampaign(campaign)
         })
@@ -109,7 +113,7 @@ public final class MoEngagePlugin: DigiaCEPPlugin {
 
     // MARK: - Private helpers
 
-    private func handleSelfHandledCampaign(_ campaign: InAppSelfHandledCampaign) {
+    func handleSelfHandledCampaign(_ campaign: MoEngageInAppSelfHandledCampaign) {
         let payload = mapper.map(campaign)
         cache.put(campaignId: payload.id, data: campaign)
         logger.info("\(self.identifier): campaign ready — id=\(payload.id)")
@@ -117,27 +121,35 @@ public final class MoEngagePlugin: DigiaCEPPlugin {
     }
 }
 
-// MARK: - MoEngageInAppDelegate
+// MARK: - MoEngageInAppNativeDelegate adapter
 
-extension MoEngagePlugin: MoEngageInAppDelegate {
-    public func inAppShownWithCampaignInfo(_ inAppInfo: MoEngageInAppCampaignInfo) {}
-    public func inAppDismissedWithCampaignInfo(_ inAppInfo: MoEngageInAppCampaignInfo) {}
-    public func inAppClickedWithCampaignInfo(
-        _ inAppInfo: MoEngageInAppCampaignInfo,
-        andWidgetInfo widgetInfo: MoEngageWidgetInfo,
-        andNavigationActionInfo actionInfo: MoEngageInAppNavigationInfo
-    ) {}
+/// Bridges `MoEngageInAppNativeDelegate` (an Obj-C protocol requiring `NSObjectProtocol`)
+/// to the `@MainActor` `MoEngagePlugin`.
+private final class MoEngageInAppDelegateAdapter: NSObject, MoEngageInAppNativeDelegate {
+    private weak var plugin: MoEngagePlugin?
 
-    public func selfHandledWithCampaignInfo(
-        _ inAppInfo: MoEngageInAppCampaignInfo,
-        andSelfHandledCampaignInfo campaignInfo: InAppSelfHandledCampaign
-    ) {
-        handleSelfHandledCampaign(campaignInfo)
+    init(plugin: MoEngagePlugin) {
+        self.plugin = plugin
     }
 
-    public func inAppCustomActionClickedWithCampaignInfo(
-        _ inAppInfo: MoEngageInAppCampaignInfo,
-        andWidgetInfo widgetInfo: MoEngageWidgetInfo,
-        andCustomActionInfo actionInfo: MoEngageInAppCustomActionInfo
-    ) {}
+    func inAppShown(withCampaignInfo inappCampaign: MoEngageInAppCampaign,
+                    forAccountMeta accountMeta: MoEngageAccountMeta) {}
+
+    func inAppClicked(withCampaignInfo inappCampaign: MoEngageInAppCampaign,
+                      andNavigationActionInfo navigationAction: MoEngageInAppNavigationAction,
+                      forAccountMeta accountMeta: MoEngageAccountMeta) {}
+
+    func inAppClicked(withCampaignInfo inappCampaign: MoEngageInAppCampaign,
+                      andCustomActionInfo customAction: MoEngageInAppAction,
+                      forAccountMeta accountMeta: MoEngageAccountMeta) {}
+
+    func inAppDismissed(withCampaignInfo inappCampaign: MoEngageInAppCampaign,
+                        forAccountMeta accountMeta: MoEngageAccountMeta) {}
+
+    func selfHandledInAppTriggered(withInfo inappCampaign: MoEngageInAppSelfHandledCampaign,
+                                   forAccountMeta accountMeta: MoEngageAccountMeta) {
+        Task { @MainActor [weak self] in
+            self?.plugin?.handleSelfHandledCampaign(inappCampaign)
+        }
+    }
 }

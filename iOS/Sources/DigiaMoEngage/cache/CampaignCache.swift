@@ -1,4 +1,4 @@
-import MoEngageInApp
+import MoEngageInApps
 
 /// In-memory implementation of `ICampaignCache`.
 ///
@@ -7,26 +7,28 @@ import MoEngageInApp
 ///
 /// Swap this with an LRU or persistent cache by implementing `ICampaignCache`
 /// and injecting it into `MoEngagePlugin` — no other code changes required.
-final class CampaignCache: ICampaignCache {
-    private var store: [String: InAppSelfHandledCampaign] = [:]
+public final class CampaignCache: ICampaignCache {
+    public init() {}
 
-    func put(campaignId: String, data: InAppSelfHandledCampaign) {
+    private var store: [String: MoEngageInAppSelfHandledCampaign] = [:]
+
+    public func put(campaignId: String, data: MoEngageInAppSelfHandledCampaign) {
         store[campaignId] = data
     }
 
-    func get(campaignId: String) -> InAppSelfHandledCampaign? {
+    public func get(campaignId: String) -> MoEngageInAppSelfHandledCampaign? {
         store[campaignId]
     }
 
-    func remove(campaignId: String) {
+    public func remove(campaignId: String) {
         store.removeValue(forKey: campaignId)
     }
 
-    func clear() {
+    public func clear() {
         store.removeAll()
     }
 
-    var count: Int { store.count }
+    public var count: Int { store.count }
 
-    var campaignIds: [String] { Array(store.keys) }
+    public var campaignIds: [String] { Array(store.keys) }
 }
