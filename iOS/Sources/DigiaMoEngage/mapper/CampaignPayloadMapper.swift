@@ -52,16 +52,18 @@ public struct CampaignPayloadMapper: ICampaignPayloadMapper {
         }
 
         // Extract only the Digia-structural fields; everything else goes into args.
-        let type         = stringValue(payloadMap["type"]) ?? "inapp"
+        let type         = stringValue(payloadMap["type"]) ?? "inline"
         let placementKey = stringValue(payloadMap["placementKey"])
         let viewId       = stringValue(payloadMap["viewId"])
         let command      = stringValue(payloadMap["command"])
 
-        // Strip structural keys; everything else (including all marketer content) goes into args.
-        let reservedKeys: Set<String> = ["type", "placementKey", "viewId", "command"]
-        var args = payloadMap.filter { !reservedKeys.contains($0.key) }
-        args["campaignId"]   = .string(campaignId)
-        args["campaignName"] = .string(campaignName)
+      var args: [String: JSONValue] = [:]
+
+if let value = payloadMap["args"],
+   case let .object(obj) = value {
+    args = obj
+}
+
 
         return InAppPayloadContent(
             type:         type,

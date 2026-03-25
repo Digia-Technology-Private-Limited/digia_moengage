@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "DigiaMoEngage",
     platforms: [
-        .iOS(.v13),
+        .iOS(.v16),
     ],
     products: [
         .library(
@@ -26,7 +26,7 @@ let package = Package(
             name: "DigiaMoEngage",
             dependencies: [
                 .product(name: "DigiaEngage", package: "DigiaEngage"),
-                .product(name: "MoEngageInApp", package: "MoEngage-iOS-SDK"),
+                .product(name: "MoEngageInApps", package: "MoEngage-iOS-SDK"),
             ],
             path: "Sources/DigiaMoEngage"
         ),
