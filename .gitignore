@@ -30,7 +30,6 @@ flutter/build/
 # Pub
 .pub-cache/
 .pub/
-flutter/pubspec.lock
 
 # Flutter plugin links
 flutter/.flutter-plugins

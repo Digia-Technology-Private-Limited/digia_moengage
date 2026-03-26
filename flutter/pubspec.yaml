@@ -2,12 +2,12 @@ name: digia_moengage_plugin
 description: >
   MoEngage CEP plugin for the Digia SDK.
   Bridges MoEngage self-handled in-app campaigns into Digia's rendering engine.
-version: 1.0.0-beta.2
+version: 1.0.0-beta.3
 repository: https://github.com/Digia-Technology-Private-Limited/digia_moengage_plugin
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
-  flutter: '>=3.20.0'
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.20.0"
 
 dependencies:
   flutter:
@@ -18,9 +18,3 @@ dependencies:
 
   # MoEngage Flutter SDK
   moengage_flutter: ^10.5.0
-
-flutter:
-  plugin:
-    platforms:
-      ios:
-        pluginClass: DigiaMoEngagePlugin

@@ -6,7 +6,6 @@ plugins {
 }
 
 group = "com.digia"
-version = "1.0.0-beta.6"
 
 android {
     namespace = "com.digia.moengage"

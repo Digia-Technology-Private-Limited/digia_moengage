@@ -1,5 +1,5 @@
 [versions]
-engage = "1.0.0-beta.02"
+engage = "1.0.0-beta.03"
 gson = "2.10.1"
 inapp = "9.9.1"
 moeAndroidSdk = "14.06.00"
