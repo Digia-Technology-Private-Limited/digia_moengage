@@ -46,3 +46,4 @@ flutter/.flutter-plugins-dependencies
 .vscode/
 *.swp
 *.swo
+iOS.diff
